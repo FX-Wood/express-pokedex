@@ -23,6 +23,9 @@ app.get('/', function(req, res) {
 // Imports all routes from the pokemon routes file
 app.use('/pokemon', require('./routes/pokemon'));
 
-var server = app.listen(process.env.PORT || 3000);
+var server = app.listen(process.env.PORT || 3000, function() {
+  console.log('express-pokedex is running');
+  console.log('listening on: ' + (process.env.PORT || 3000))
+  });
 
 module.exports = server;
