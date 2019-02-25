@@ -1,12 +1,15 @@
 require('dotenv').config();
 var express = require('express');
 var request = require('request');
+var methodOverride = require('method-override')
 var ejsLayouts = require('express-ejs-layouts');
 var app = express();
 
 app.use(require('morgan')('dev'));
 app.set('view engine', 'ejs');
+app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false }));
+app.use(methodOverride('_method'));
 app.use(ejsLayouts);
 
 // GET / - main index of site
@@ -24,7 +27,7 @@ app.use('/pokemon', require('./routes/pokemon'));
 
 var server = app.listen(process.env.PORT || 3000, function() {
   console.log('express-pokedex is running');
-  console.log('listening on: ' + (process.env.PORT || 3000))
-  });
+  console.log('listening on: ' + (process.env.PORT || 3000));
+});
 
 module.exports = server;

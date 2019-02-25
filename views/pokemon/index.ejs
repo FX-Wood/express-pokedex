@@ -1,0 +1,18 @@
+<div class="container">
+    <h1 class="text-center">Favorite pokemon</h1>
+    <p class="text-center">
+      <a href="/">Add more to favorites</a>
+    </p>
+  
+    <% favs.forEach(function(fav) { %>
+      <div class="well">
+        <h2><%= fav.name %></h2>
+        <form method="GET" action="/pokemon/<%= fav.name %>">
+          <button class="btn btn-primary" type="submit">Check out your favorite: <%= fav.name %></button>
+        </form>
+        <form>
+            <button class="btn btn-primary" type="submit" formmethod="POST" formaction="/pokemon/<%= fav.name %>?_method=DELETE">Remove <%= fav.name %> from favorites</button>
+        </form> 
+      </div>
+    <% }); %>
+  </div>

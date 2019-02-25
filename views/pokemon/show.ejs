@@ -1,0 +1,108 @@
+
+<%  
+function classPicker(depth) { 
+    switch(depth) {               
+        case 0:                     
+            return 'card card-body';            
+        case 1:                     
+            return 'well';
+        case 2:
+            return 'card'
+        default:                    
+            return 'card';            
+    }                             
+  }                               %>
+<%
+function spanPicker(depth, rawText) {
+    let text = rawText.replace('_', ' ')
+    if (text) {
+        switch(depth) {
+            case 1:
+                return `<h3 class=${'c' + depth + ' card-title'}> ${(text === 'name' || text === 'flavor_text') ? '' : text} </h3>`
+            case 2:
+                return `<h4 class=${'c' + depth + ' card-subtitle'}> ${(text === 'name' || text === 'flavor_text') ? '' : text} </h4>`
+            case 3:
+                `<span class=${'c' + depth + ' card-text'}> ${(text === 'name' || text === 'flavor_text') ? '' : text} </span>`
+            default:
+                return `<span class=${'c' + depth + ' card-text'}> ${(text === 'name' || text === 'flavor_text') ? '' : text} </span>`
+        }
+    }
+}
+
+%>
+
+<%                        var i = 0 %>
+<%                        var d = 0 %>
+<%                        function spit(data) { %>
+<%                            if (i < 10000) { %>
+<%                                if (typeof data !== 'object') { %>
+                                    <span class="v"> <%= data %> </span>
+<%                                } else { %>
+                                      </div><div class=" <%= 'div' + d + ' ' + classPicker(d) %>">
+<%                                    d++    %>
+<%                                    if (Array.isArray(data) && data.length > 0) { %>
+                                          <ul class ="list-group">
+<%                                        data.forEach(item => { %>
+<%                                            if (typeof item.flavor_text === 'undefined') { %>
+                                                    <li class="list-group-item">
+<%                                                spit(item) %>
+                                                    </li>
+<%                                            } else { %>
+<%                                                (item.language.name === 'en'? spit(item) : '') %>
+<%                                            } %>
+<%                                        }) %>
+                                          </ul>
+<%                                    } else { %>
+<%                                        for (let key in data) { %>
+<%                                            if (key !== 'url' && key !== 'version_group_details' && key !== 'sprites' && key !== 'language') { %> 
+                                                    <%- spanPicker(d, key) %>
+<%                                                spit(data[key]) %>
+<%                                            } %>
+<%                                             %>
+<%                                        } %>
+<%                                    } %>
+                                    </div><div class="test">
+<%                                  d-- %>
+<%                                } %>
+<%                                console.log(i++) %>
+<%                            } %>
+<%                         }%>
+<p> extendedMoves </p>
+
+
+<div class="container">
+    <h1 class="text-center"><%= fav.name %></h1>
+    <p class="text-center"><a href="/">Add more to favorites</a></p>
+
+        <div class="container">
+            <h2><%= fav.name %></h2>
+            <div class="well">
+                <img src="#" alt="sprite of pokemon">
+                <p>Flavor text about pokemon</p>
+                <div class="well">
+                    <div class="card card-body">
+                        <h2 class="card-title">Moves</h2>
+
+                        <div><% spit(extendedMoves) %>
+                    </div>
+                </div>
+                </p>
+                <p>Habitat</p>
+                <p><%= {test: {abcasdf: 12345}} %></p>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-6 container" >
+                    <h2>Pokemon</h2>
+                    <% spit(pokemon) %>
+                </div>
+                <div class="col-xs-6 container">
+                    <h2>Species</h2>   
+                    <% spit(species) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
