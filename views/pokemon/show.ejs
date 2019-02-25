@@ -80,10 +80,11 @@ function spanPicker(depth, rawText) {
     <p class="text-center"><a href="/">Add more to favorites</a></p>
 
         <div class="container">
-            <div><%spit(pokemon.types)%></div>
-            <div><%spit() %></div>
-
             <h2>Quick Facts</h2>
+            <div><%spit({About: {[species.flavor_text_entries[0].version.name]: species.flavor_text_entries[0].flavor_text}}) %></div>
+            <div><%spit({types: pokemon.types})%></div>
+            <div><%spit({habitat: {ecosystem: species.habitat.name}}) %></div>
+
                 <img src="#" alt="sprite of pokemon">
                 <p>Flavor text about pokemon</p>
                 <div class="well">

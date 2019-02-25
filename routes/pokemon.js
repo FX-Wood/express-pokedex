@@ -108,6 +108,7 @@ router.get('/:name', function(req, res) {
           extendedMoves.push({[element.move.name] : output});
           if (i === pokemon.moves.length - 1 ) {
             fs.writeFileSync('public/log.json', JSON.stringify(extendedMoves))
+            
             db.favorite.findOne({
               where: {name: req.params.name}
             })
