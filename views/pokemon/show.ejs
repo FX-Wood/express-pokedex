@@ -3,9 +3,9 @@
 function classPicker(depth) { 
     switch(depth) {               
         case 0:                     
-            return 'card card-body';            
+            return 'well';            
         case 1:                     
-            return 'well';
+            return 'card';
         case 2:
             return 'card'
         default:                    
@@ -14,17 +14,19 @@ function classPicker(depth) {
   }                               %>
 <%
 function spanPicker(depth, rawText) {
-    let text = rawText.replace('_', ' ')
+    console.log(rawText)
+    let text = rawText.replace(/_/g, ' ')
+    text = text.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     if (text) {
         switch(depth) {
             case 1:
-                return `<h3 class=${'c' + depth + ' card-title'}> ${(text === 'name' || text === 'flavor_text') ? '' : text} </h3>`
+                return `<h2 class=${'c' + depth + ' card-title'}> ${(text === 'name' || text === 'flavor_text') ? '' : text} </h1>`
             case 2:
-                return `<h4 class=${'c' + depth + ' card-subtitle'}> ${(text === 'name' || text === 'flavor_text') ? '' : text} </h4>`
+                return `<h2 class=${'c' + depth + ' card-subtitle'}> ${(text === 'name' || text === 'flavor_text') ? '' : text} </h2>`
             case 3:
-                `<span class=${'c' + depth + ' card-text'}> ${(text === 'name' || text === 'flavor_text') ? '' : text} </span>`
+                `<h4 class="${'c' + depth}"> ${(text === 'name' || text === 'flavor_text') ? '' : text} </h5>`
             default:
-                return `<span class=${'c' + depth + ' card-text'}> ${(text === 'name' || text === 'flavor_text') ? '' : text} </span>`
+                return `<h4 class="${'c' + depth}"> ${(text === 'name' || text === 'flavor_text') ? '' : text} </h6>`
         }
     }
 }
@@ -36,12 +38,14 @@ function spanPicker(depth, rawText) {
 <%                        function spit(data) { %>
 <%                            if (i < 10000) { %>
 <%                                if (typeof data !== 'object') { %>
-                                    <span class="v"> <%= data %> </span>
+                                    </dt><dd class="v col-md-9 card-body-text card-body"> <%= data %> </dd> </div>
 <%                                } else { %>
-                                      </div><div class=" <%= 'div' + d + ' ' + classPicker(d) %>">
+                                      <div class=" <%= 'div' + d + ' ' + classPicker(d) %>">
 <%                                    d++    %>
 <%                                    if (Array.isArray(data) && data.length > 0) { %>
-                                          <ul class ="list-group">
+                                    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="<%='#collapse' + i %>">Collapse me</button>                                        
+                                          <div class="collapse.show" id="<%= 'collapse' + i %>">
+                                          <ul class="list-group ">
 <%                                        data.forEach(item => { %>
 <%                                            if (typeof item.flavor_text === 'undefined') { %>
                                                     <li class="list-group-item">
@@ -51,17 +55,18 @@ function spanPicker(depth, rawText) {
 <%                                                (item.language.name === 'en'? spit(item) : '') %>
 <%                                            } %>
 <%                                        }) %>
-                                          </ul>
+                                          </ul></div>
 <%                                    } else { %>
 <%                                        for (let key in data) { %>
 <%                                            if (key !== 'url' && key !== 'version_group_details' && key !== 'sprites' && key !== 'language') { %> 
-                                                    <%- spanPicker(d, key) %>
+<%-                                                typeof data[key] === 'object'? '' : `<div class="row list-group"> <dt class="col-md-3 card-body-text"` %>
+                                                <%- spanPicker(d, key) %>
 <%                                                spit(data[key]) %>
 <%                                            } %>
 <%                                             %>
 <%                                        } %>
 <%                                    } %>
-                                    </div><div class="test">
+                                    </div>
 <%                                  d-- %>
 <%                                } %>
 <%                                console.log(i++) %>
@@ -75,8 +80,10 @@ function spanPicker(depth, rawText) {
     <p class="text-center"><a href="/">Add more to favorites</a></p>
 
         <div class="container">
-            <h2><%= fav.name %></h2>
-            <div class="well">
+            <div><%spit(pokemon.types)%></div>
+            <div><%spit() %></div>
+
+            <h2>Quick Facts</h2>
                 <img src="#" alt="sprite of pokemon">
                 <p>Flavor text about pokemon</p>
                 <div class="well">
@@ -91,6 +98,7 @@ function spanPicker(depth, rawText) {
                 <p><%= {test: {abcasdf: 12345}} %></p>
             </div>
         </div>
+        
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-6 container" >

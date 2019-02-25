@@ -69,11 +69,13 @@ router.get('/:name', function(req, res) {
   request(uri.pokemon(req.params.name), function(error, response, body) {
     reqLog(this)
     let pokemon = JSON.parse(body)
-
+    
+    
     // GET SPECIES DATA
     request(uri.species(req.params.name), function(error, response, body) {
       reqLog(this)
       let species = JSON.parse(body)
+      species.flavor_text_entries = species.flavor_text_entries.filter(languageFilter)
 
       // GET DATA FOR EACH MOVE
       let extendedMoves = [];
@@ -83,10 +85,22 @@ router.get('/:name', function(req, res) {
           console.log('on move', i, 'of', pokemon.moves.length)
           let output = {}
           let moveObj = JSON.parse(body);
+          // REMOVE EMPTY METAS
+          for (let attr in moveObj['meta']) {
+            if (moveObj['meta'][attr] == null) {
+              delete moveObj['meta'][attr]
+            }
+          }
           for (let key of props.want.move) {
             if (key === 'flavor_text_entries') {
-              let englishEntries = moveObj[key].filter(languageFilter)
-              output[key] = englishEntries.filter(moveFlavorFilter);
+              let entries = moveObj[key].filter(languageFilter).filter(moveFlavorFilter);
+              console.log(entries)
+              output[key] = entries.map(entry => {
+                return {
+                  [entry.version_group.name]: {flavor_text: entry.flavor_text},
+                  language: {name: 'en'}
+                }
+              })
             } else if (moveObj[key]) {
                 output[key] = moveObj[key]
             }
